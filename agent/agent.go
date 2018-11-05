@@ -2,9 +2,9 @@ package agent
 
 import (
 	"fmt"
+	"github.com/garyburd/redigo/redis"
 	"os/exec"
 	"strings"
-	"github.com/garyburd/redigo/redis"
 )
 
 type TwemproxyConfig struct {
@@ -24,13 +24,13 @@ func UpdateMaster(master_name string, ip string, port string) bool {
 	Debug(fmt.Sprintf("Updating master %s to %s.", master_name, address))
 	servers := twemproxyConfig[Settings.TwemproxyPoolName].Servers
 	for i := range servers {
-		server_data    := strings.Split(servers[i], string(' '))
-		address_data   := strings.Split(server_data[0], string(':'))
-		old_address    := ComposeRedisAddress(address_data[0], address_data[1])
-		server_name    := server_data[1]
+		server_data := strings.Split(servers[i], string(' '))
+		address_data := strings.Split(server_data[0], string(':'))
+		old_address := ComposeRedisAddress(address_data[0], address_data[1])
+		server_name := server_data[1]
 
-		if master_name == server_name && address != old_address {
-			twemproxyConfig[Settings.TwemproxyPoolName].Servers[i] = fmt.Sprint(address, ":1 ", master_name)
+		if address != old_address {
+			twemproxyConfig[Settings.TwemproxyPoolName].Servers[i] = fmt.Sprint(address, ":1 ", server_name)
 			return true
 		}
 	}
@@ -94,8 +94,8 @@ func ValidateCurrentMaster() error {
 		return err
 	}
 	master_name := sentinel_info[1]
-	ip          := sentinel_info[3]
-	port        := sentinel_info[5]
+	ip := sentinel_info[3]
+	port := sentinel_info[5]
 
 	err = SwitchMaster(master_name, ip, port)
 
