@@ -54,6 +54,7 @@ func WriteYaml(path string, obj interface{}) error {
 	error := os.Rename(tmp, path)
 
 	log.Println(error.Error())
+	fmt.Println(123123213)
 	return error
 }
 
