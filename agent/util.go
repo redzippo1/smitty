@@ -52,9 +52,7 @@ func WriteYaml(path string, obj interface{}) error {
 		return err
 	}
 
-	error := os.Rename(tmp, path)
-
-	return error
+	return os.Rename(tmp, path)
 }
 
 func ReadYaml(path string, obj interface{}) error {

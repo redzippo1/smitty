@@ -50,7 +50,7 @@ func SaveTwemproxyConfig() {
 
 func RestartTwemproxy() error {
 	Debug("Restarting Twemproxy.")
-	out, err := exec.Command(Settings.RestartCommand).Output()
+	out, err := exec.Command("/bin/sh", "-c", Settings.RestartCommand).Output()
 
 	if err != nil {
 		Debug(fmt.Sprintf("Cannot restart twemproxy. output: %s. error: %s", out, err))
